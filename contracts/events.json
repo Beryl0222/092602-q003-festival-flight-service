@@ -1,0 +1,33 @@
+{
+  "名称": "节日航班服务包重排事件契约",
+  "说明": "所有变更以事件入账；客户端命令必须携带 event_id，重放相同载荷幂等，编号相同载荷不同将冻结相关服务包。",
+  "命令事件": {
+    "flight_version_registered": "登记航班版本，rules 支持 disallowed_item_types 与 allergen_declaration_required",
+    "station_registered": "登记休息室站点及容量",
+    "batch_registered": "登记物料批次（供应方、类型、数量、是否高风险、过敏原声明）",
+    "allergens_declared": "补充或更正批次过敏原声明",
+    "staff_registered": "登记活动人员资质与容量",
+    "staff_assigned": "把活动人员排入航班版本",
+    "handover_recorded": "装载交接，把批次数量装上航班版本，累计不得超过批次总量",
+    "passenger_registered": "登记旅客及过敏原",
+    "package_registered": "登记旅客在某航班版本下的服务包",
+    "entitlement_reserved": "预留权益并占用唯一份额（派生 share 固化在事件中）",
+    "entitlement_confirmed": "确认权益，沿用预留份额，不二次占用",
+    "entitlement_redeemed": "核销体验，形成不可改写事实",
+    "migration_started": "航班拆并开始，派生 entitlement_ids 快照",
+    "substitution_proposed": "提出替代方案，高风险食品进入待复核",
+    "substitution_approved": "复核通过，须不同角色且非批次供应方"
+  },
+  "派生事件": {
+    "entitlement_migrated": "权益迁往目标航班版本并换占份额",
+    "liability_recorded": "无法兑现，登记未兑现责任并释放原份额",
+    "migration_item_skipped": "队列项已不可迁移，跳过",
+    "migration_completed": "迁移完成",
+    "packages_frozen": "事件编号载荷冲突，冻结相关服务包",
+    "substitution_applied": "替代方案兑现，生成已确认补偿权益",
+    "substitution_failed": "替代批次不可用或过敏原冲突"
+  },
+  "查询": {
+    "passengerStatement": "返回旅客最终可领取项目、每次变更依据、未兑现责任与受影响批次"
+  }
+}
