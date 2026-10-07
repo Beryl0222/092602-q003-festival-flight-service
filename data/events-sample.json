@@ -1,0 +1,16 @@
+[
+  { "event_id": "pax-001", "type": "passenger_registered", "payload": { "passenger_id": "P1001", "allergens": ["花生"] } },
+  { "event_id": "pax-002", "type": "passenger_registered", "payload": { "passenger_id": "P1002", "allergens": [] } },
+  { "event_id": "flt-100v1", "type": "flight_registered", "payload": { "flight_id": "CZ100", "version": 1, "origin": "CAN", "destination": "PEK", "aircraft": "A330" } },
+  { "event_id": "flt-200v1", "type": "flight_registered", "payload": { "flight_id": "CZ200", "version": 1, "origin": "CAN", "destination": "PEK", "aircraft": "B787" } },
+  { "event_id": "stn-01", "type": "station_registered", "payload": { "station_id": "L-CAN-01", "airport": "CAN", "capacity": 20 } },
+  { "event_id": "bat-01", "type": "batch_registered", "payload": { "batch_id": "B-MOON-01", "supplier_id": "SUP-A", "kind": "festival_food", "allergens": ["花生"], "high_risk": true, "quantity": 50 } },
+  { "event_id": "bat-02", "type": "batch_registered", "payload": { "batch_id": "B-MOON-02", "supplier_id": "SUP-B", "kind": "festival_food", "allergens": [], "high_risk": false, "quantity": 50 } },
+  { "event_id": "stf-01", "type": "staff_registered", "payload": { "staff_id": "ART-01", "qualifications": ["heritage_demo"], "sessions": 2 } },
+  { "event_id": "ldg-01", "type": "loading_recorded", "payload": { "flight_id": "CZ200", "version": 1, "batch_id": "B-MOON-02", "quantity": 50 } },
+  { "event_id": "ent-001", "type": "entitlement_reserved", "payload": { "entitlement_id": "E-0001", "passenger_id": "P1001", "flight_id": "CZ100", "kind": "lounge_access", "station_id": "L-CAN-01" } },
+  { "event_id": "ent-002", "type": "entitlement_reserved", "payload": { "entitlement_id": "E-0002", "passenger_id": "P1002", "flight_id": "CZ100", "kind": "festival_food", "batch_id": "B-MOON-02" } },
+  { "event_id": "ent-003", "type": "entitlement_reserved", "payload": { "entitlement_id": "E-0003", "passenger_id": "P1002", "flight_id": "CZ100", "kind": "heritage_demo", "staff_id": "ART-01" } },
+  { "event_id": "ent-002c", "type": "entitlement_confirmed", "payload": { "entitlement_id": "E-0002" } },
+  { "event_id": "merge-01", "type": "flights_merged", "payload": { "merge_id": "MG-01", "source_flight_ids": ["CZ100"], "target_flight_id": "CZ200" } }
+]

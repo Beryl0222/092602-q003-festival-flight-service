@@ -1,0 +1,36 @@
+{
+  "名称": "节日航班服务包重排事件契约",
+  "说明": "所有领域变更以事件形式追加到账本；event_id 全局唯一，重放同号同载荷幂等，同号异载荷冻结相关服务包。",
+  "通用字段": {
+    "event_id": "事件编号，全局唯一，重放去重的依据",
+    "type": "事件类型，见下表",
+    "payload": "业务载荷，按类型要求字段"
+  },
+  "事件类型": {
+    "passenger_registered": { "payload": ["passenger_id", "allergens?"], "说明": "旅客资格登记，allergens 为过敏原声明" },
+    "flight_registered": { "payload": ["flight_id", "version", "origin", "destination", "aircraft?"], "说明": "航班版本登记，机型更换以新 version 表示" },
+    "station_registered": { "payload": ["station_id", "airport", "capacity"], "说明": "休息室站点及容量" },
+    "batch_registered": { "payload": ["batch_id", "supplier_id", "quantity", "allergens?", "high_risk?"], "说明": "物料批次及过敏原声明" },
+    "batch_recalled": { "payload": ["batch_id", "reason"], "说明": "批次召回，占用该批次的在途权益转为未兑现责任并出补偿" },
+    "staff_registered": { "payload": ["staff_id", "qualifications", "sessions"], "说明": "活动人员资质与场次" },
+    "staff_cancelled": { "payload": ["staff_id"], "说明": "活动人员取消，相关非遗演示权益转为未兑现责任" },
+    "destination_rule_registered": { "payload": ["airport", "kind", "allowed", "note?"], "说明": "目的地规则，迁移时校验" },
+    "loading_recorded": { "payload": ["flight_id", "version", "batch_id", "quantity"], "说明": "批次装载交接，按航班版本记录" },
+    "entitlement_reserved": { "payload": ["entitlement_id", "passenger_id", "flight_id", "kind", "station_id?/batch_id?/staff_id?"], "说明": "权益预留，占用唯一可用份额；kind ∈ lounge_access/festival_food/heritage_demo" },
+    "entitlement_confirmed": { "payload": ["entitlement_id"], "说明": "确认占用份额" },
+    "entitlement_redeemed": { "payload": ["entitlement_id"], "说明": "现场核销，事实保留，不再迁移" },
+    "entitlement_released": { "payload": ["entitlement_id", "reason?"], "说明": "释放份额" },
+    "flights_merged": { "payload": ["merge_id", "source_flight_ids", "target_flight_id"], "说明": "航班合并，触发迁移结算：仍可兑现且符合目的地规则的迁移，其余转为未兑现责任" },
+    "flight_split": { "payload": ["split_id", "source_flight_id", "parts"], "说明": "航班拆分，parts 为 [{flight_id, passenger_ids}]，未覆盖旅客的权益转为未兑现责任" },
+    "substitution_proposed": { "payload": ["substitution_id", "entitlement_id", "replacement_batch_id", "proposer{actor_id,role,supplier_id?}"], "说明": "高风险食品替换提案" },
+    "substitution_reviewed": { "payload": ["substitution_id", "decision", "reviewer{actor_id,role,supplier_id?}"], "说明": "复核：高风险需不同角色，供应方不能批准自身批次" },
+    "compensation_fulfilled": { "payload": ["compensation_id"], "说明": "补偿核销" },
+    "freeze_lifted": { "payload": ["freeze_id", "entitlement_id"], "说明": "人工核查后解冻" }
+  },
+  "派生事件": ["entitlement_migrated", "obligation_recorded", "compensation_offered", "packages_frozen"],
+  "查询接口": {
+    "passengerStatement(passenger_id)": "最终可领取项目、每次变更依据、未兑现责任、受影响批次、冻结项",
+    "recover()": "重启后续办未完成迁移并返回恢复报告",
+    "recoveryReport()": "待迁移、未兑现责任、待补偿、冻结与冲突清单"
+  }
+}
